@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Your Activities</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Activity Name</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Date</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for activity in page_obj %}
+                <tr>
+                    <td><strong>{{ activity.name }}</strong></td>
+                    <td>{{ activity.duration }}</td>
+                    <td>{{ activity.date }}</td>
+                    <td>
+                        <a href="{% url 'activity_edit' activity.id %}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{% url 'activity_delete' activity.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="mt-3">
+        <nav>
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    <a href="{% url 'activity_add' %}" class="btn btn-primary mt-3">Add Activity</a>
+
+    <!-- Recommendations Section -->
+    <div class="mt-5">
+        <h3>Recommendations</h3>
+        {% if recommendations %}
+            <ul class="list-group">
+                {% for recommendation in recommendations %}
+                    <li class="list-group-item">{{ recommendation }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No recommendations at this time.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
